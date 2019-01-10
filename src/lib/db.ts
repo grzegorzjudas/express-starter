@@ -14,16 +14,17 @@ const REQUIRED_COLLECTIONS = Object.keys(dbSchema);
 
 export default class DBMongo implements Database {
     public db: Db = null;
+    public client: MongoClient = null;
     public error: APIError = null;
     public onConnected: Promise<void>;
 
     constructor (url: string, database: string, auth?: string[] | null) {
         this.onConnected = new Promise<void>(async (resolve, reject) => {
             try {
-                const client = await MongoClient.connect(`mongodb://${auth ? `${auth[0]}:${auth[1]}` : ''}@${url}/admin`, {
+                this.client = await MongoClient.connect(`mongodb://${auth ? `${auth[0]}:${auth[1]}` : ''}@${url}/admin`, {
                     useNewUrlParser: true
                 });
-                this.db = client.db(database);
+                this.db = this.client.db(database);
 
                 const isSetup = await this.isSetup();
                 if (!isSetup) {
@@ -53,6 +54,12 @@ export default class DBMongo implements Database {
         if (!this.db && this.error) return false;
 
         return this.onConnected.then(() => true);
+    }
+
+    public async disconnect (): Promise<void> {
+        if (!this.db) return;
+
+        return this.client.close();
     }
 
     public async isSetup (): Promise<boolean> {

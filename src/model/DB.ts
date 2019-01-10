@@ -9,6 +9,7 @@ export interface Database {
     error?: APIError;
     getType: () => DBType;
     isConnected: () => Promise<boolean>;
+    disconnect: () => Promise<void>;
     isSetup: () => Promise<boolean>;
     setup: () => Promise<void>;
     count: (collection: string, filter?: AnyObject) => Promise<number>;

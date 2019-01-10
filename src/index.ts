@@ -13,12 +13,16 @@ import APIError from 'controller/APIError';
 import Config from 'controller/Config';
 import Log, { JSErrors } from 'controller/Log';
 import { closeWithError } from 'lib/http';
-import { stopGracefullyOnKill } from 'lib/process';
+import Process from 'lib/process';
 
-stopGracefullyOnKill(process, (err) => {
-    if (err) Log.error(`Fatal error: ${err.message}`);
+Process.onStop(async () => {
+    Log.info('Stopping server');
+});
 
-    Log.info('Stopping server.');
+Process.onException(async (error) => {
+    if (error) Log.error(`Fatal error: ${error.message}`);
+
+    Log.info('Stopping server');
 });
 
 if (Config.STRICT_TLS === false) {
