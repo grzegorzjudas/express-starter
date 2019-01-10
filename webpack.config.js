@@ -38,7 +38,14 @@ module.exports = {
     target: 'node',
     resolve: {
         alias: {
-            common: path.join(__dirname, '..', 'homie-common/src')
+            controller: path.join(__dirname, './src/controller'),
+            doc: path.join(__dirname, './src/doc'),
+            lib: path.join(__dirname, './src/lib'),
+            middleware: path.join(__dirname, './src/middleware'),
+            model: path.join(__dirname, './src/model'),
+            route: path.join(__dirname, './src/route'),
+            schema: path.join(__dirname, './src/schema'),
+            service: path.join(__dirname, './src/service')
         },
         extensions: [ '.ts', '.js', '.json' ]
     },
