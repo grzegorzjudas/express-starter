@@ -1,0 +1,110 @@
+#%RAML 1.0
+
+title: Express Starter
+version: 1.0.0
+
+securitySchemes: 
+    Basic Authentication:
+        type: Basic Authentication
+        describedBy:
+            headers:
+                Authorization:
+                    type: string
+                    required: true
+                    description: Basic HTTP base64-encoded header
+                    example: Basic am9obi5kb2VAaG9taWUuY29tOmFiY2QxMjM0
+    Token Authentication:
+        type: x-token
+        describedBy:
+            headers:
+                Token:
+                    type: string
+                    required: true
+                    description: Valid JWT access token
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1YmVjN2IyMGY0MmNkZjVhM2U3NjYyNWYiLCJpYXQiOjE1NDIyMjQ2ODZ9.ByGqjwuKuI46iso5ErJbBJuhKpYgccw36cU2DtOX3Z0
+
+/status:
+    get:
+        description: Service healthcheck information
+        responses:
+            200:
+                body:
+                    application/json:
+                        schema: !include response_schemas/get-status.json
+                        example: !include example/get-status-response.json
+
+/user:
+    get:
+        description: Provides information about currently authenticated user
+        securedBy: [ Token Authentication ]
+        responses:
+            200:
+                body:
+                    application/json:
+                        schema: !include response_schemas/get-user.json
+                        example: !include example/get-user-response.json
+            400:
+                body:
+                    application/json:
+                        schema: !include response_schemas/api-error.json
+                        example: !include example/api-error.json
+            401:
+                body:
+                    application/json:
+                        schema: !include response_schemas/api-error.json
+                        example: !include example/api-error.json
+            500:
+                body:
+                    application/json:
+                        schema: !include response_schemas/api-error.json
+                        example: !include example/api-error.json
+    /signin:
+        post:
+            description: Signs user in, providing access token to protected resources for further requests
+            securedBy: [ Basic Authentication ]
+            responses:
+                200:
+                    body:
+                        application/json:
+                            schema: !include response_schemas/post-user-signin.json
+                            example: !include example/post-user-signin-response.json
+                400:
+                    body:
+                        application/json:
+                            schema: !include response_schemas/api-error.json
+                            example: !include example/api-error.json
+                401:
+                    body:
+                        application/json:
+                            schema: !include response_schemas/api-error.json
+                            example: !include example/api-error.json
+                500:
+                    body:
+                        application/json:
+                            schema: !include response_schemas/api-error.json
+                            example: !include example/api-error.json
+    /signout:
+        post:
+            description: Signs user out, invalidating the access token provided
+            securedBy: [ Token Authentication ]
+            responses:
+                200:
+                    body:
+                        application/json:
+                            schema: !include response_schemas/post-user-signout.json
+                            example: !include example/post-user-signout-response.json
+                400:
+                    body:
+                        application/json:
+                            schema: !include response_schemas/api-error.json
+                            example: !include example/api-error.json
+                401:
+                    body:
+                        application/json:
+                            schema: !include response_schemas/api-error.json
+                            example: !include example/api-error.json
+                500:
+                    body:
+                        application/json:
+                            schema: !include response_schemas/api-error.json
+                            example: !include example/api-error.json

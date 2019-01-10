@@ -1,0 +1,55 @@
+{
+    "name": "express-starter",
+    "version": "1.0.0",
+    "description": "Express starter app",
+    "main": "index.js",
+    "scripts": {
+        "build": "npm run build:app && npm run build:doc",
+        "build:app": "webpack",
+        "build:doc": "mkdir ./build/doc && raml2html ./src/doc/raml/documentation.raml > ./build/doc/index.html",
+        "dev": "nodemon -e ts,json,raml --exec \"npm run start\"",
+        "package": "cd build && tar -zcf ../artifact.tar.gz . && cd ..",
+        "lint": "tslint --project tsconfig.json",
+        "start": "npm run build && node build/index.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+[your_repo_url].git"
+    },
+    "keywords": [],
+    "author": "[your_name_here]",
+    "license": "[license_type]",
+    "bugs": {
+        "url": "[your_repo_url]/issues"
+    },
+    "homepage": "[your_repo_url]#readme",
+    "dependencies": {
+        "bcryptjs": "^2.4.3",
+        "body-parser": "^1.18.3",
+        "express": "^4.16.4",
+        "joi": "^14.3.1",
+        "jsonwebtoken": "^8.4.0",
+        "mongodb": "^3.1.10",
+        "node-fetch": "^2.3.0"
+    },
+    "devDependencies": {
+        "@types/bcryptjs": "^2.4.2",
+        "@types/express": "^4.16.0",
+        "@types/joi": "^14.0.1",
+        "@types/jsonwebtoken": "^8.3.0",
+        "@types/mongodb": "^3.1.18",
+        "@types/node-fetch": "^2.1.4",
+        "@types/webpack-env": "^1.13.6",
+        "copy-webpack-plugin": "^4.6.0",
+        "nodemon": "^1.18.9",
+        "raml2html": "^7.2.1",
+        "ts-loader": "^5.3.3",
+        "tslint": "^5.12.0",
+        "tslint-config-standard": "^8.0.1",
+        "tslint-eslint-rules": "^5.4.0",
+        "typescript": "^3.2.2",
+        "webpack": "^4.28.1",
+        "webpack-cli": "^3.2.1"
+    }
+}

@@ -1,0 +1,26 @@
+{
+    "development": {
+        "APP_NAME": "express-starter",
+        "NODE_ENV": "development",
+        "PORT": 8081,
+        "STRICT_TLS": false,
+        "LOG_LEVEL": "DEBUG",
+        "DB_TYPE": "MONGO",
+        "DB_URL": "localhost:27017",
+        "DB_NAME": "development",
+        "DB_AUTH": "",
+        "USER_AUTH_HASH": "$2a$08$TvaEqF3PeJJBITMS/OZfoe"
+    },
+    "production": {
+        "APP_NAME": "express-starter",
+        "NODE_ENV": "production",
+        "PORT": 80,
+        "STRICT_TLS": true,
+        "LOG_LEVEL": "INFO",
+        "DB_TYPE": "MONGO",
+        "DB_URL": "",
+        "DB_NAME": "development",
+        "DB_AUTH": "",
+        "USER_AUTH_HASH": "$2a$08$TvaEqF3PeJJBITMS/OZfoe"
+    }
+}

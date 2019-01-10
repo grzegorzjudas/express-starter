@@ -1,0 +1,35 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "type": "object",
+    "properties": {
+        "firstName": {
+            "description": "User's first name",
+            "type": "string"
+        },
+        "lastName": {
+            "description": "User's last name (surname)",
+            "type": "string"
+        },
+        "email": {
+            "description": "User's email",
+            "type": "string"
+        },
+        "avatar": {
+            "description": "An URL for user's avatar picture",
+            "type": "string"
+        },
+        "role": {
+            "description": "User's access level; user = 0, moderator = 1, admin = 2",
+            "type": "number",
+            "minimum": 0,
+            "maximum": 2
+        }
+    },
+    "required": [
+        "firstName",
+        "lastName",
+        "email",
+        "avatar",
+        "role"
+    ]
+}

@@ -1,0 +1,18 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "type": "object",
+    "properties": {
+        "message": {
+            "description": "Detailed information about the error",
+            "type": "string"
+        },
+        "code": {
+            "description": "HTTP status code for the response",
+            "type": "number"
+        }
+    },
+    "required": [
+        "message",
+        "code"
+    ]
+}

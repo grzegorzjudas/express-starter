@@ -1,0 +1,17 @@
+{
+    "users": [
+        {
+            "_meta" : {
+                "created" : 1544879010094,
+                "lastLogin" : null
+            },
+            "firstName" : "Admin",
+            "lastName" : "Admin",
+            "email" : "admin@express-starter.com",
+            "avatar": "http://semperavanti.org/wp-content/uploads/2014/01/empty-avatar.png",
+            "password" : "$2a$08$TvaEqF3PeJJBITMS/OZfoe9RKEXRB3Csbr7DNykla8ZZwJ3QnDK2S",
+            "role" : 2,
+            "sessions" : []
+        }
+    ]
+}

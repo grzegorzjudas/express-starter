@@ -1,0 +1,40 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "outDir": "build",
+        "module": "esnext",
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "target": "es2017",
+        "sourceMap": true,
+        "lib": [
+            "esnext",
+            "dom"
+        ],
+        "allowJs": true,
+        "strict": true,
+        "strictNullChecks": false,
+        "forceConsistentCasingInFileNames": true,
+        "suppressImplicitAnyIndexErrors": true,
+        "allowSyntheticDefaultImports": true,
+        "noImplicitReturns": true,
+        "noImplicitThis": true,
+        "noImplicitAny": false,
+        "noUnusedLocals": true,
+        "paths": {
+            "controller/*": [ "./src/controller/*" ],
+            "doc/*": [ "./src/doc/*" ],
+            "lib/*": [ "./src/lib/*" ],
+            "middleware/*": [ "./src/middleware/*" ],
+            "model/*": [ "./src/model/*" ],
+            "route/*": [ "./src/route/*" ],
+            "schema/*": [ "./src/schema/*" ],
+            "service/*": [ "./src/service/*" ]
+        }
+    },
+    "exclude": [
+        "node_modules",
+        "build",
+        "src/**/*.spec.*"
+    ]
+}

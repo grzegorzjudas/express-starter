@@ -1,0 +1,9 @@
+.vscode/
+node_modules/
+build/
+
+*.log
+.DS_Store
+
+config.json
+artifact.tar.gz
