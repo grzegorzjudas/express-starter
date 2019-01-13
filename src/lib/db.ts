@@ -10,8 +10,6 @@ import APIError from 'controller/APIError';
 import Log from 'controller/Log';
 import dbSchema from 'schema/db.json';
 
-const REQUIRED_COLLECTIONS = Object.keys(dbSchema);
-
 export default class DBMongo implements Database {
     public db: Db = null;
     public client: MongoClient = null;
@@ -66,7 +64,7 @@ export default class DBMongo implements Database {
         const collections: Collection<AnyObject>[] = await this.db.collections();
         const collectionNames = collections.map((col: Collection<AnyObject>) => col.collectionName);
 
-        return REQUIRED_COLLECTIONS.every((col) => collectionNames.includes(col));
+        return Object.keys(dbSchema).every((col) => collectionNames.includes(col));
     }
 
     public async setup (): Promise<void> {
@@ -77,7 +75,7 @@ export default class DBMongo implements Database {
             throw new APIError('Invalid database schema. All collections must be arrays.');
         }
 
-        for (let collectionName of REQUIRED_COLLECTIONS) {
+        for (let collectionName of Object.keys(dbSchema)) {
             if (!collections.find((col) => col.collectionName === collectionName)) {
                 await this.db.createCollection(collectionName);
 
