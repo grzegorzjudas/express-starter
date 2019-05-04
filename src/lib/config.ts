@@ -1,3 +1,6 @@
+/* Libraries */
+import cls from 'cls-hooked';
+
 /* Models */
 import { LogLevel } from 'model/Log';
 
@@ -49,8 +52,13 @@ export default class Config {
     public static PORT: number = getConfig('PORT', 'number');
     public static STRICT_TLS: boolean = getConfig('STRICT_TLS', 'boolean');
     public static LOG_LEVEL: LogLevel = getConfig('LOG_LEVEL', 'string') as LogLevel;
+    public static SESSION_NAMESPACE: string = getConfig('SESSION_NAMESPACE', 'string');
     public static DB_URL: string = getConfig('DB_URL', 'string');
     public static DB_NAME: string = getConfig('DB_NAME', 'string');
     public static DB_AUTH: string[] = getConfig('DB_AUTH', 'auth');
     public static USER_AUTH_HASH: string = getConfig('USER_AUTH_HASH', 'string');
+
+    public static fromSession (name: string) {
+        return cls.getNamespace(Config.SESSION_NAMESPACE).get(name);
+    }
 }

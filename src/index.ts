@@ -1,5 +1,6 @@
 /* Libraries */
 import express from 'express';
+import cls from 'cls-hooked';
 
 /* Models */
 import { AddressInfo } from 'net';
@@ -24,6 +25,8 @@ Process.onException(async (error) => {
 
     Log.info('Stopping server');
 });
+
+cls.createNamespace(Config.SESSION_NAMESPACE);
 
 if (Config.STRICT_TLS === false) {
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';

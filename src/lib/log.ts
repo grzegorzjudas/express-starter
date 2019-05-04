@@ -1,5 +1,6 @@
 /* Libraries */
 import os from 'os';
+import cls from 'cls-hooked';
 
 /* Models */
 import { LogLevel, LogColor } from 'model/Log';
@@ -8,11 +9,6 @@ import { LogLevel, LogColor } from 'model/Log';
 import Config from 'lib/config';
 
 const order = [ LogLevel.DEBUG, LogLevel.INFO, LogLevel.WARNING, LogLevel.ERROR ];
-const defaultFields = {
-    HostName: os.hostname(),
-    Application: Config.APP_NAME,
-    Environment: Config.NODE_ENV
-};
 
 type LogParams = {
     [k: string]: any
@@ -24,6 +20,22 @@ type Logger = {
     warn: (msg: string, params?: LogParams) => void;
     error: (msg: string, params?: LogParams) => void;
 };
+
+function getFullFields () {
+    const store = cls.getNamespace(Config.SESSION_NAMESPACE);
+
+    function getFromStore (name: string) {
+        return store.get(name) ? { [name]: store.get(name) } : {};
+    }
+
+    return {
+        HostName: os.hostname(),
+        Application: Config.APP_NAME,
+        Environment: Config.NODE_ENV,
+        ...getFromStore('RequestID'),
+        ...getFromStore('SessionID')
+    };
+}
 
 function colorize (level: LogLevel, func: Function) {
     return (msg: string) => {
@@ -59,7 +71,11 @@ export default function createLogger (minimum: LogLevel): Logger {
     function log (level: LogLevel, msg: string, fields: LogParams) {
         if (order.indexOf(level) < order.indexOf(minimum)) return;
 
-        msg = attachFieldsToMessage({ LogLevel: level, ...defaultFields, ...fields }, msg);
+        msg = attachFieldsToMessage({
+            ...(Config.NODE_ENV === 'production' ? getFullFields() : {}),
+            LogLevel: level,
+            ...fields
+        }, msg);
         msg = `${new Date().toISOString()} ${msg}`;
 
         if (Config.NODE_ENV !== 'development') return mapLevelToLogger(level)(msg);

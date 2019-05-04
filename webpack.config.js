@@ -2,9 +2,7 @@ const env = process.env.NODE_ENV || 'development';
 
 const webpack = require('webpack');
 const path = require('path');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 const exec = require('child_process').exec;
-const CONFIG = require('./config.json')[env];
 
 function printEnvironment (environment, colors) {
     console.log([
@@ -64,10 +62,5 @@ module.exports = {
                 ]
             }
         ]
-    },
-    plugins: switchEnvs([
-        new webpack.DefinePlugin({ CONFIG: JSON.stringify(CONFIG) })
-    ], [
-        new CopyWebpackPlugin([ { from: './ecosystem.config.js' } ])
-    ])
+    }
 };
