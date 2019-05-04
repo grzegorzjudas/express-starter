@@ -71,12 +71,15 @@ export default function createLogger (minimum: LogLevel): Logger {
     function log (level: LogLevel, msg: string, fields: LogParams) {
         if (order.indexOf(level) < order.indexOf(minimum)) return;
 
+        const offset = (new Date()).getTimezoneOffset() * 60000;
+        const time = (new Date(Date.now() - offset)).toISOString().slice(0, -1);
+
         msg = attachFieldsToMessage({
             ...(Config.NODE_ENV === 'production' ? getFullFields() : {}),
-            LogLevel: level,
+            ...(Config.NODE_ENV === 'production' ? { LogLevel: level } : {}),
             ...fields
         }, msg);
-        msg = `${new Date().toISOString()} ${msg}`;
+        msg = `${time} ${msg}`;
 
         if (Config.NODE_ENV !== 'development') return mapLevelToLogger(level)(msg);
         return colorize(level, mapLevelToLogger(level))(msg);
