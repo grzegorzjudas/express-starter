@@ -38,11 +38,11 @@ module.exports = {
         alias: {
             controller: path.join(__dirname, './src/controller'),
             doc: path.join(__dirname, './src/doc'),
+            db: path.join(__dirname, './src/db'),
             lib: path.join(__dirname, './src/lib'),
             middleware: path.join(__dirname, './src/middleware'),
             model: path.join(__dirname, './src/model'),
             route: path.join(__dirname, './src/route'),
-            schema: path.join(__dirname, './src/schema'),
             service: path.join(__dirname, './src/service')
         },
         extensions: [ '.ts', '.js', '.json' ]

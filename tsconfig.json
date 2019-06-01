@@ -23,12 +23,12 @@
         "noUnusedLocals": true,
         "paths": {
             "controller/*": [ "./src/controller/*" ],
+            "db/*": [ "./src/db/*" ],
             "doc/*": [ "./src/doc/*" ],
             "lib/*": [ "./src/lib/*" ],
             "middleware/*": [ "./src/middleware/*" ],
             "model/*": [ "./src/model/*" ],
             "route/*": [ "./src/route/*" ],
-            "schema/*": [ "./src/schema/*" ],
             "service/*": [ "./src/service/*" ]
         }
     },

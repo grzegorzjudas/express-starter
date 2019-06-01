@@ -8,7 +8,7 @@ import { AnyObject } from 'model/Object';
 /* Application files */
 import APIError from 'controller/APIError';
 import Log from 'controller/Log';
-import dbSchema from 'schema/db.json';
+import dbSchema from 'db/schema/mongo.json';
 
 export default class DBMongo implements Database {
     public db: Db = null;
