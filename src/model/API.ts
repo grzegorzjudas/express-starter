@@ -3,6 +3,7 @@ import { Request as ExpressRequest, Response as ExpressResponse } from 'express-
 import { SchemaLike } from 'joi';
 import { HTTPMethod } from './HTTP';
 import { UserAccessLevel } from './User';
+import { AnyObject } from './Object';
 
 /* Application files */
 import APIError from '../controller/APIError';
@@ -13,6 +14,11 @@ export type APIRoute = {
     schema?: SchemaLike;
     protected?: UserAccessLevel;
     controller: Function;
+};
+
+export type RestResponse = {
+    body: any;
+    headers: AnyObject;
 };
 
 export interface Request extends ExpressRequest {

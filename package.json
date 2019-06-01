@@ -10,7 +10,7 @@
         "dev": "nodemon -e ts,json,raml --exec \"npm run start\"",
         "package": "cd build && tar -zcf ../artifact.tar.gz . && cd ..",
         "lint": "tslint --project tsconfig.json",
-        "start": "npm run build && node -r dotenv/config build/index.js",
+        "start": "npm run build:app && node -r dotenv/config build/index.js",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "repository": {

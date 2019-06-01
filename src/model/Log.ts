@@ -1,3 +1,6 @@
+import { Span } from 'opentracing';
+import { AnyObject } from './Object';
+
 export enum LogLevel {
     DEBUG = 'DEBUG',
     INFO = 'INFO',
@@ -11,3 +14,10 @@ export enum LogColor {
     RED = '\x1b[31m',
     DEFAULT = '\x1b[0m'
 }
+
+export type SpanOptions = {
+    parent?: Span;
+    target: string;
+    action: string;
+    tags?: AnyObject;
+};

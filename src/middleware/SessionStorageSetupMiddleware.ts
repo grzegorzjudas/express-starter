@@ -19,6 +19,7 @@ export default function () {
         store.run(async () => {
             store.set('RequestID', requestId);
             store.set('SessionID', sessionId);
+            store.set('Span', span);
 
             await next();
 
