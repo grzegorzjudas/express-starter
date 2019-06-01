@@ -5,11 +5,11 @@ import cls from 'cls-hooked';
 import { LogLevel } from 'model/Log';
 
 function getMostRelevantConfigProp (prop: string) {
-    if (typeof process.env[prop] !== 'undefined') prop = process.env[prop];
-    else if (typeof CONFIG !== 'undefined') prop = CONFIG[prop];
-    else return null;
+    if (typeof process.env[prop] !== 'undefined') {
+        return process.env[prop];
+    }
 
-    return prop;
+    return null;
 }
 
 function getConfigString (prop: string): string {
@@ -57,6 +57,7 @@ export default class Config {
     public static DB_NAME: string = getConfig('DB_NAME', 'string');
     public static DB_AUTH: string[] = getConfig('DB_AUTH', 'auth');
     public static USER_AUTH_HASH: string = getConfig('USER_AUTH_HASH', 'string');
+    public static EXPOSE_DOCS: boolean = getConfig('EXPOSE_DOCS', 'boolean');
 
     public static fromSession (name: string) {
         return cls.getNamespace(Config.SESSION_NAMESPACE).get(name);

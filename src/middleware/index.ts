@@ -13,7 +13,7 @@ export default [
     CrossOriginHeadersMiddleware(),
     RequestDataJsonParserMiddleware(),
     BasicAuthenticationMiddleware(),
-    DocumentationOnRootMiddleware(),
+    Config.EXPOSE_DOCS && DocumentationOnRootMiddleware(),
     SessionStorageSetupMiddleware(),
     TokenValidationMiddleware(DB, Config.USER_AUTH_HASH)
 ];
