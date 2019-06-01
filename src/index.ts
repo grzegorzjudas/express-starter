@@ -15,6 +15,8 @@ import Config from './controller/Config';
 import Log, { JSErrors } from './controller/Log';
 import { closeWithError } from './lib/http';
 import Process from './lib/process';
+import { createTracer } from './lib/log';
+import { initGlobalTracer } from 'opentracing';
 
 Process.onStop(async () => {
     Log.info('Stopping server');
@@ -27,6 +29,7 @@ Process.onException(async (error) => {
 });
 
 cls.createNamespace(Config.SESSION_NAMESPACE);
+initGlobalTracer(createTracer());
 
 if (Config.STRICT_TLS === false) {
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';

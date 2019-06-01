@@ -1,6 +1,7 @@
 /* Libraries */
 import os from 'os';
 import cls from 'cls-hooked';
+import { initTracerFromEnv } from 'jaeger-client';
 
 /* Models */
 import { LogLevel, LogColor } from '../model/Log';
@@ -65,6 +66,12 @@ function mapLevelToColor (level: LogLevel): LogColor {
 
 function attachFieldsToMessage (fields: LogParams, msg: string): string {
     return Object.entries(fields).reduce((msg, [ key, value ]) => `[${key}=${value}] ${msg}`, msg);
+}
+
+export function createTracer () {
+    return initTracerFromEnv({
+        serviceName: Config.APP_NAME
+    }, {});
 }
 
 export default function createLogger (minimum: LogLevel): Logger {

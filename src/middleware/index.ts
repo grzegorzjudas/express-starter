@@ -10,10 +10,10 @@ import SessionStorageSetupMiddleware from './SessionStorageSetupMiddleware';
 import TokenValidationMiddleware from './TokenValidationMiddleware';
 
 export default [
+    SessionStorageSetupMiddleware(),
     CrossOriginHeadersMiddleware(),
     RequestDataJsonParserMiddleware(),
     BasicAuthenticationMiddleware(),
     Config.EXPOSE_DOCS && DocumentationOnRootMiddleware(),
-    SessionStorageSetupMiddleware(),
     TokenValidationMiddleware(DB, Config.USER_AUTH_HASH)
 ];
