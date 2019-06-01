@@ -1,12 +1,12 @@
 /* Models */
-import { Request } from 'model/API';
-import { Database, DBSchemaUser } from 'model/DB';
-import { HTTPCode } from 'model/HTTP';
-import { Token } from 'model/User';
+import { Request } from '../model/API';
+import { Database, DBSchemaUser } from '../model/DB';
+import { HTTPCode } from '../model/HTTP';
+import { Token } from '../model/User';
 
 /* Application files */
-import { getToken, decodeToken } from 'lib/token';
-import APIError from 'controller/APIError';
+import { getToken, decodeToken } from '../lib/token';
+import APIError from '../controller/APIError';
 
 export default function (DB: Database, hash: string) {
     return [ async (req: Request, res, next) => {

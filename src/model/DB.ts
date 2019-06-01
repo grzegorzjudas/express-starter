@@ -3,7 +3,7 @@ import { AnyObject } from './Object';
 import { UserAccessLevel } from './User';
 
 /* Application files */
-import APIError from 'controller/APIError';
+import APIError from '../controller/APIError';
 
 export interface Database {
     error?: APIError;

@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
         "build": "npm run build:app && npm run build:doc",
-        "build:app": "webpack",
+        "build:app": "rm -rf build && tsc -p .",
         "build:doc": "mkdir ./build/doc && raml2html ./src/doc/raml/documentation.raml > ./build/doc/index.html",
         "dev": "nodemon -e ts,json,raml --exec \"npm run start\"",
         "package": "cd build && tar -zcf ../artifact.tar.gz . && cd ..",
@@ -50,8 +50,6 @@
         "tslint": "^5.12.0",
         "tslint-config-standard": "^8.0.1",
         "tslint-eslint-rules": "^5.4.0",
-        "typescript": "^3.2.2",
-        "webpack": "^4.28.1",
-        "webpack-cli": "^3.2.1"
+        "typescript": "^3.2.2"
     }
 }

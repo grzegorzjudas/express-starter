@@ -1,5 +1,5 @@
 /* Application files */
-import DBMongo from 'lib/db';
+import DBMongo from '../lib/db';
 import Config from './Config';
 import Log from './Log';
 

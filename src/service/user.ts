@@ -2,12 +2,12 @@
 import bcrypt from 'bcryptjs';
 
 /* Models */
-import { DBSchemaUser, DBSchemaUserSession } from 'model/DB';
+import { DBSchemaUser, DBSchemaUserSession } from '../model/DB';
 
 /* Application files */
-import DB from 'controller/DB';
-import Log from 'controller/Log';
-import APIError from 'controller/APIError';
+import DB from '../controller/DB';
+import Log from '../controller/Log';
+import APIError from '../controller/APIError';
 
 export async function encryptPassword (password: string, salt: string): Promise<string> {
     return new Promise<string>((resolve, reject) => {

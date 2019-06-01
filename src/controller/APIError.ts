@@ -1,5 +1,5 @@
 /* Models */
-import { HTTPCode } from 'model/HTTP';
+import { HTTPCode } from '../model/HTTP';
 
 export default class APIError {
     public message: string;

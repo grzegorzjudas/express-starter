@@ -3,10 +3,10 @@ import os from 'os';
 import cls from 'cls-hooked';
 
 /* Models */
-import { LogLevel, LogColor } from 'model/Log';
+import { LogLevel, LogColor } from '../model/Log';
 
 /* Application files */
-import Config from 'lib/config';
+import Config from '../lib/config';
 
 const order = [ LogLevel.DEBUG, LogLevel.INFO, LogLevel.WARNING, LogLevel.ERROR ];
 

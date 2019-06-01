@@ -1,13 +1,13 @@
 /* Models */
-import { APIRoute, Request, Response } from 'model/API';
-import { HTTPMethod, HTTPCode } from 'model/HTTP';
+import { APIRoute, Request, Response } from '../../model/API';
+import { HTTPMethod, HTTPCode } from '../../model/HTTP';
 
 /* Application files */
-import APIError from 'controller/APIError';
-import Config from 'controller/Config';
-import Log from 'controller/Log';
-import { respondSuccess, getRequestOriginIP } from 'lib/http';
-import { createToken } from 'lib/token';
+import APIError from '../../controller/APIError';
+import Config from '../../controller/Config';
+import Log from '../../controller/Log';
+import { respondSuccess, getRequestOriginIP } from '../../lib/http';
+import { createToken } from '../../lib/token';
 import {
     findUserByEmail,
     validatePassword,
@@ -15,7 +15,7 @@ import {
     addSessionToUser,
     findUserById,
     cleanUserObject
-} from 'service/user';
+} from '../../service/user';
 
 export default {
     method: HTTPMethod.POST,

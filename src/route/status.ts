@@ -1,10 +1,10 @@
 /* Models */
-import { APIRoute, Request, Response } from 'model/API';
-import { HTTPMethod } from 'model/HTTP';
+import { APIRoute, Request, Response } from '../model/API';
+import { HTTPMethod } from '../model/HTTP';
 
 /* Application files */
-import { respondSuccess } from 'lib/http';
-import DB from 'controller/DB';
+import { respondSuccess } from '../lib/http';
+import DB from '../controller/DB';
 
 export default {
     method: HTTPMethod.GET,

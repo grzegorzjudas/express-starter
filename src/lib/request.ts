@@ -2,10 +2,10 @@
 import fetch from 'node-fetch';
 
 /* Models */
-import { HTTPMethod, HTTPCode } from 'model/HTTP';
+import { HTTPMethod, HTTPCode } from '../model/HTTP';
 
 /* Application files */
-import APIError from 'controller/APIError';
+import APIError from '../controller/APIError';
 
 async function request (method: HTTPMethod, url: string, data?: any, token?: string): Promise<any> {
     try {

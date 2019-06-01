@@ -3,7 +3,7 @@ import cls from 'cls-hooked';
 import uuid from 'uuid/v4';
 
 /* Application files */
-import Config from 'controller/Config';
+import Config from '../controller/Config';
 
 export default function () {
     return [ (req, res, next) => {

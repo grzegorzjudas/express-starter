@@ -4,17 +4,17 @@ import cls from 'cls-hooked';
 
 /* Models */
 import { AddressInfo } from 'net';
-import { Request, Response } from 'model/API';
-import { HTTPCode } from 'model/HTTP';
+import { Request, Response } from './model/API';
+import { HTTPCode } from './model/HTTP';
 
 /* Application files */
 import routes from './route';
 import middlewares from './middleware';
-import APIError from 'controller/APIError';
-import Config from 'controller/Config';
-import Log, { JSErrors } from 'controller/Log';
-import { closeWithError } from 'lib/http';
-import Process from 'lib/process';
+import APIError from './controller/APIError';
+import Config from './controller/Config';
+import Log, { JSErrors } from './controller/Log';
+import { closeWithError } from './lib/http';
+import Process from './lib/process';
 
 Process.onStop(async () => {
     Log.info('Stopping server');

@@ -2,11 +2,11 @@
 import jwt from 'jsonwebtoken';
 
 /* Models */
-import { HTTPCode } from 'model/HTTP';
-import { Token } from 'model/User';
+import { HTTPCode } from '../model/HTTP';
+import { Token } from '../model/User';
 
 /* Application files */
-import APIError from 'controller/APIError';
+import APIError from '../controller/APIError';
 
 export async function createToken (id: string, hash: string): Promise<string> {
     return jwt.sign({ _id: id }, hash);

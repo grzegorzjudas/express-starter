@@ -2,7 +2,7 @@
 import cls from 'cls-hooked';
 
 /* Models */
-import { LogLevel } from 'model/Log';
+import { LogLevel } from '../model/Log';
 
 function getMostRelevantConfigProp (prop: string) {
     if (typeof process.env[prop] !== 'undefined') {

@@ -2,11 +2,11 @@
 import joi, { SchemaLike } from 'joi';
 
 /* Models */
-import { HTTPCode } from 'model/HTTP';
-import { AnyObject } from 'model/Object';
+import { HTTPCode } from '../model/HTTP';
+import { AnyObject } from '../model/Object';
 
 /* Application files */
-import APIError from 'controller/APIError';
+import APIError from '../controller/APIError';
 
 export function respondSuccess (res, data: any = null, status: HTTPCode = HTTPCode.OK) {
     res.set('Content-Type', 'application/json');

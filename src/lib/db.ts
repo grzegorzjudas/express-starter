@@ -2,13 +2,13 @@
 import { MongoClient, Db, Collection, ObjectID } from 'mongodb';
 
 /* Models */
-import { Database, DBType } from 'model/DB';
-import { AnyObject } from 'model/Object';
+import { Database, DBType } from '../model/DB';
+import { AnyObject } from '../model/Object';
 
 /* Application files */
-import APIError from 'controller/APIError';
-import Log from 'controller/Log';
-import dbSchema from 'db/schema/mongo.json';
+import APIError from '../controller/APIError';
+import Log from '../controller/Log';
+import dbSchema from '../db/schema/mongo.json';
 
 export default class DBMongo implements Database {
     public db: Db = null;

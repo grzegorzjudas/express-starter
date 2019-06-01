@@ -5,7 +5,7 @@ import { HTTPMethod } from './HTTP';
 import { UserAccessLevel } from './User';
 
 /* Application files */
-import APIError from 'controller/APIError';
+import APIError from '../controller/APIError';
 
 export type APIRoute = {
     method: HTTPMethod;
