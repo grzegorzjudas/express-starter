@@ -46,7 +46,8 @@ export function validateRequestPayload (body: any, schema: SchemaLike): Promise<
             stripUnknown: true
         }, (error, data) => {
             if (error) {
-                const msg = `Request validation failed: ${error.details[0].message} (${buildPath(error.details[0].path)})`;
+                const path = buildPath(error.details[0].path);
+                const msg = `Request validation failed: ${error.details[0].message} (${path})`;
 
                 return reject(new APIError(msg, HTTPCode.BAD_REQUEST));
             }

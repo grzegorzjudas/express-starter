@@ -6,9 +6,16 @@ import { HTTPMethod, HTTPCode } from 'model/HTTP';
 import APIError from 'controller/APIError';
 import Config from 'controller/Config';
 import Log from 'controller/Log';
-import { findUserByEmail, validatePassword, createSessionObject, addSessionToUser, findUserById, cleanUserObject } from 'service/user';
 import { respondSuccess, getRequestOriginIP } from 'lib/http';
 import { createToken } from 'lib/token';
+import {
+    findUserByEmail,
+    validatePassword,
+    createSessionObject,
+    addSessionToUser,
+    findUserById,
+    cleanUserObject
+} from 'service/user';
 
 export default {
     method: HTTPMethod.POST,

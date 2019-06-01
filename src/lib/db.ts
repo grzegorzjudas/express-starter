@@ -19,7 +19,8 @@ export default class DBMongo implements Database {
     constructor (url: string, database: string, auth?: string[] | null) {
         this.onConnected = new Promise<void>(async (resolve, reject) => {
             try {
-                this.client = await MongoClient.connect(`mongodb://${auth ? `${auth[0]}:${auth[1]}` : ''}@${url}/admin`, {
+                const credentials = auth ? `${auth[0]}:${auth[1]}@` : '';
+                this.client = await MongoClient.connect(`mongodb://${credentials}${url}/admin`, {
                     useNewUrlParser: true
                 });
                 this.db = this.client.db(database);

@@ -42,8 +42,13 @@ for (let route of routes) {
     server[route.method.toLowerCase()](route.url, async (req: Request, res: Response) => {
         Log.info(`${route.method} ${route.url}`);
 
-        if (typeof route.protected === 'number' && (req.user.error || !req.user.token || req.user.role < route.protected)) {
-            return closeWithError(res, new APIError('Authentication failure: you do not have access to this resource.', HTTPCode.FORBIDDEN));
+        const isProtected = typeof route.protected === 'number';
+        const insufficientPermissions = req.user.role < route.protected;
+
+        if (isProtected && (req.user.error || !req.user.token || insufficientPermissions)) {
+            const msg = 'Authentication failure: you do not have access to this resource.';
+
+            return closeWithError(res, new APIError(msg, HTTPCode.FORBIDDEN));
         }
 
         try {
