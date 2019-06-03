@@ -1,6 +1,6 @@
 version: 2
 jobs:
-    build:
+    build_app:
         docker:
             - image: circleci/node:10.16.0
         working_directory: ~/repo
@@ -23,3 +23,43 @@ jobs:
             - run:
                 name: Package
                 command: npm run package
+            - persist_to_workspace:
+                root: .
+                paths:
+                    - Dockerfile
+                    - package.json
+                    - package-lock.json
+                    - artifact.tar.gz
+    build_docker:
+        docker:
+            - image: docker:18.09.6
+        working_directory: ~/repo
+        steps:
+            - attach_workspace:
+                at: .
+            - restore_cache:
+                keys:
+                    - v1-docker-{{ .Branch }}
+                paths:
+                    - /caches/app.tar
+            - run:
+                name: Load docker image layer cache
+                run: set +o pipefall && docker load -i /caches/app.tar | true
+            - run:
+                name: Build docker image
+                run: docker image build --tag grzegorzjudas/express-starter:latest --cache-from=/cache/app.tar .
+            - run:
+                name: Save docker image layer cache
+                run: mkdir -p /caches && docker save -o /caches/app.tar grzegorzjudas/express-starter:latest
+            - save_cache:
+                key: v1-docker-{{ .Branch }}-{{ epoch }}
+                paths:
+                    - /caches/app.tar
+workflows:
+    version: 2
+    default:
+        jobs:
+            - build_app
+            - build_docker:
+                requires:
+                    - build_app
