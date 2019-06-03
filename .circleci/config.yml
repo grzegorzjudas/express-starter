@@ -44,7 +44,7 @@ jobs:
                     - /caches/app.tar
             - run:
                 name: Load docker image layer cache
-                command: set +o pipefall && docker load -i /caches/app.tar | true
+                command: set +o pipefail && docker load -i /caches/app.tar | true
             - run:
                 name: Build docker image
                 command: docker image build --tag grzegorzjudas/express-starter:latest --cache-from=/cache/app.tar .
