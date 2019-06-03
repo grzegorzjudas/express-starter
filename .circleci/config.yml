@@ -23,6 +23,3 @@ jobs:
             - run:
                 name: Package
                 command: npm run package
-            - run:
-                name: Docker image build
-                command: docker image build -t grzegorzjudas/express-starter:latest .
