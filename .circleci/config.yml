@@ -1,6 +1,6 @@
 version: 2
 jobs:
-    Build Application:
+    Build App:
         docker:
             - image: circleci/node:10.16.0
         working_directory: ~/repo
@@ -30,7 +30,7 @@ jobs:
                     - package.json
                     - package-lock.json
                     - artifact.tar.gz
-    Build Docker Image:
+    Build Docker:
         docker:
             - image: docker:18.09.6
         working_directory: ~/repo
@@ -60,7 +60,7 @@ workflows:
     version: 2
     default:
         jobs:
-            - Build Application
-            - Build Docker Image:
+            - Build App
+            - Build Docker:
                 requires:
-                    - Build Application
+                    - Build App
