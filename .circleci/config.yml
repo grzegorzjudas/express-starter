@@ -1,0 +1,28 @@
+version: 2
+jobs:
+    build:
+        docker:
+            - image: circleci/node:10.16.0
+        working_directory: ~/repo
+        steps:
+            - checkout:
+            - restore_cache:
+                keys:
+                    - v1-dependencies-{{ checksum "package.json" }}
+                    - v1-dependencies-
+            - run:
+                name: Install dependencies
+                command: npm install
+            - save_cache:
+                paths:
+                    - node_modules
+                key: v1-dependencies-{{ checksum "package.json" }}
+            - run:
+                name: Build
+                command: NODE_ENV=production npm run build
+            - run:
+                name: Package
+                command: npm run package
+            - run:
+                name: Docker image build
+                command: docker image build -t grzegorzjudas/express-starter:latest .

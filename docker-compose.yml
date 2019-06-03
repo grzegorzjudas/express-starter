@@ -1,0 +1,19 @@
+version: "3.7"
+services:
+    api:
+        build: .
+        image: grzegorzjudas/express-starter
+        env_file:
+            - env-local.env
+            - env-docker.env
+        ports:
+            - "8080:80"
+        depends_on:
+            - db
+            - jaeger
+    db:
+        image: mongo:3.4
+    jaeger:
+        image: jaegertracing/all-in-one
+        ports:
+            - "16686:16686"

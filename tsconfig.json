@@ -22,17 +22,7 @@
         "noImplicitThis": true,
         "resolveJsonModule": true,
         "noImplicitAny": false,
-        "noUnusedLocals": true,
-        "paths": {
-            "controller/*": [ "./src/controller/*" ],
-            "db/*": [ "./src/db/*" ],
-            "doc/*": [ "./src/doc/*" ],
-            "lib/*": [ "./src/lib/*" ],
-            "middleware/*": [ "./src/middleware/*" ],
-            "model/*": [ "./src/model/*" ],
-            "route/*": [ "./src/route/*" ],
-            "service/*": [ "./src/service/*" ]
-        }
+        "noUnusedLocals": true
     },
     "exclude": [
         "node_modules",

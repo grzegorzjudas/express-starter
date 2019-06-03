@@ -4,13 +4,14 @@
     "description": "Express starter app",
     "main": "index.js",
     "scripts": {
-        "build": "npm run build:app && npm run build:doc",
-        "build:app": "rm -rf build && tsc -p .",
+        "build": "npm run clean && npm run build:app && npm run build:doc",
+        "build:app": "if [ $NODE_ENV = \"production\" ]; then tsc -p tsconfig.prod.json; else tsc -p .; fi",
         "build:doc": "mkdir ./build/doc && raml2html ./src/doc/raml/documentation.raml > ./build/doc/index.html",
+        "clean": "rm -rf build",
         "dev": "nodemon -e ts,json,raml --exec \"npm run start\"",
         "package": "cd build && tar -zcf ../artifact.tar.gz . && cd ..",
         "lint": "tslint --project tsconfig.json",
-        "start": "npm run build:app && node -r dotenv/config build/index.js",
+        "start": "npm run build:app && node -r dotenv/config build/index.js dotenv_config_path=env-local.env",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "repository": {
