@@ -44,13 +44,13 @@ jobs:
                     - /caches/app.tar
             - run:
                 name: Load docker image layer cache
-                run: set +o pipefall && docker load -i /caches/app.tar | true
+                command: set +o pipefall && docker load -i /caches/app.tar | true
             - run:
                 name: Build docker image
-                run: docker image build --tag grzegorzjudas/express-starter:latest --cache-from=/cache/app.tar .
+                command: docker image build --tag grzegorzjudas/express-starter:latest --cache-from=/cache/app.tar .
             - run:
                 name: Save docker image layer cache
-                run: mkdir -p /caches && docker save -o /caches/app.tar grzegorzjudas/express-starter:latest
+                command: mkdir -p /caches && docker save -o /caches/app.tar grzegorzjudas/express-starter:latest
             - save_cache:
                 key: v1-docker-{{ .Branch }}-{{ epoch }}
                 paths:
