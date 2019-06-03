@@ -1,5 +1,5 @@
 /* Libraries */
-import joi, { SchemaLike } from 'joi';
+import joi, { SchemaLike } from '@hapi/joi';
 
 /* Models */
 import { HTTPCode } from '../model/HTTP';

@@ -1,6 +1,6 @@
 /* Models */
 import { Request as ExpressRequest, Response as ExpressResponse } from 'express-serve-static-core';
-import { SchemaLike } from 'joi';
+import { SchemaLike } from '@hapi/joi';
 import { HTTPMethod } from './HTTP';
 import { UserAccessLevel } from './User';
 import { AnyObject } from './Object';
