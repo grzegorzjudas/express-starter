@@ -48,7 +48,7 @@ jobs:
                 command: set +o pipefail && docker load -i /caches/app.tar | true
             - run:
                 name: Build docker image
-                command: docker image build --tag grzegorzjudas/express-starter:latest --cache-from=/cache/app.tar .
+                command: docker image build --tag app --cache-from=/cache/app.tar .
             - run:
                 name: Save docker image layer cache
                 command: mkdir -p /caches && docker save -o /caches/app.tar grzegorzjudas/express-starter:latest
@@ -63,6 +63,7 @@ jobs:
                     pip install awscli
                     login=$(aws ecr get-login --no-include-email)
                     ${login}
+                    docker tag app ${ECR_ENDPOINT}/grzegorzjudas/express-starter:latest
                     docker push "${ECR_ENDPOINT}/grzegorzjudas/express-starter:latest"
 workflows:
     version: 2
