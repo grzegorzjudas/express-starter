@@ -1,9 +1,10 @@
-.vscode/
 node_modules/
-build/
+dist/
 
 *.log
-.DS_Store
 
-config.json
+env-development.env
+env-production.env
+
 artifact.tar.gz
+.DS_Store

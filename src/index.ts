@@ -1,22 +1,22 @@
 /* Libraries */
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import cls from 'cls-hooked';
+import { initGlobalTracer } from 'opentracing';
 
-/* Models */
+/* Types */
 import { AddressInfo } from 'net';
-import { Request, Response } from './model/API';
-import { HTTPCode } from './model/HTTP';
+import { HTTPCode } from './type/HTTP';
 
 /* Application files */
-import routes from './route';
-import middlewares from './middleware';
-import APIError from './controller/APIError';
-import Config from './controller/Config';
-import Log, { JSErrors } from './controller/Log';
-import { closeWithError } from './lib/http';
 import Process from './lib/process';
-import { createTracer } from './lib/log';
-import { initGlobalTracer } from 'opentracing';
+import Log, { createTracer } from './lib/log';
+import Config from './lib/config';
+import APIError from './lib/error';
+
+import preMiddlewares from './middleware/pre';
+import postMiddlewares from './middleware/post';
+import routes from './route';
+import { respondSuccess, closeWithError, validateRequestBody } from './lib/http';
 
 Process.onStop(async () => {
     Log.info('Stopping server');
@@ -29,7 +29,7 @@ Process.onException(async (error) => {
 });
 
 cls.createNamespace(Config.SESSION_NAMESPACE);
-initGlobalTracer(createTracer());
+initGlobalTracer(createTracer(Config.APP_NAME));
 
 if (Config.STRICT_TLS === false) {
     process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
@@ -37,45 +37,40 @@ if (Config.STRICT_TLS === false) {
 
 const server = express();
 
-for (let middleware of middlewares) {
-    server.use(...middleware);
+for (const preMiddleware of preMiddlewares) {
+    server.use(...preMiddleware as any);
 }
 
-for (let route of routes) {
-    server[route.method.toLowerCase()](route.url, async (req: Request, res: Response) => {
-        Log.info(`${route.method} ${route.url}`);
-
-        const isProtected = typeof route.protected === 'number';
-        const insufficientPermissions = req.user.role < route.protected;
-
-        if (isProtected && (req.user.error || !req.user.token || insufficientPermissions)) {
-            const msg = 'Authentication failure: you do not have access to this resource.';
-
-            return closeWithError(res, new APIError(msg, HTTPCode.FORBIDDEN));
-        }
+for (const route of routes) {
+    server[route.method.toLowerCase()](route.url, async (req: Request, res: Response, next: NextFunction) => {
+        Log.debug(`${route.method} ${route.url}`);
 
         try {
-            await route.controller(req, res);
+            if (route.schema) req.body = await validateRequestBody(req.body, route.schema);
+
+            const response = await route.controller(req, res);
+
+            if (typeof response !== 'undefined') respondSuccess(res, response);
         } catch (error) {
-            if (JSErrors.includes(error.name) || error.code === HTTPCode.INTERNAL_SERVER_ERROR) {
-                Log.error(error.message);
+            if (error instanceof APIError) return error;
 
-                return closeWithError(res, new APIError('There has been a technical error.'));
-            }
+            const { message, stack } = error as Error;
 
-            return closeWithError(res, error);
+            closeWithError(res, new APIError(message, HTTPCode.INTERNAL_SERVER_ERROR, true, stack));
         }
+
+        return next();
     });
 }
 
-server.use((req, res, next) => {
-    return closeWithError(res, new APIError('Route not found.', HTTPCode.NOT_FOUND));
-});
+for (const postMiddleware of postMiddlewares) {
+    server.use(...postMiddleware);
+}
 
 const instance = server.listen(Config.PORT, () => {
     const { address, port } = instance.address() as AddressInfo;
 
     Log.info(`Server listening on ${address}:${port}`);
 }).on('error', (err) => {
-    Log.error(`Could not start server: ${err.message}`);
+    Log.fail(`Could not start server: ${err.message}`);
 });

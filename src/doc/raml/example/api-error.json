@@ -1,7 +1,0 @@
-{
-    "status": "error",
-    "data": {
-        "message": "Some error message.",
-        "code": 403
-    }
-}

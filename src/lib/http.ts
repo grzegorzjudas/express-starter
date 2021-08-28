@@ -1,58 +1,72 @@
 /* Libraries */
-import joi, { SchemaLike } from '@hapi/joi';
+import { AnySchema } from 'joi';
 
-/* Models */
-import { HTTPCode } from '../model/HTTP';
-import { AnyObject } from '../model/Object';
+/* Types */
+import { Response } from 'express';
+import { Span, Tags } from 'opentracing';
+import { HTTPCode } from '../type/HTTP';
 
 /* Application files */
-import APIError from '../controller/APIError';
+import APIError from './error';
+import Config from './config';
 
-export function respondSuccess (res, data: any = null, status: HTTPCode = HTTPCode.OK) {
+export function respondSuccess (res: Response, data: any = null, status: number = HTTPCode.OK): void {
     res.set('Content-Type', 'application/json');
-
     res.status(status);
-    res.send(JSON.stringify({ status: 'ok', data }, null, 4));
-}
 
-export function closeWithError (res, data: AnyObject = {}, status = HTTPCode.INTERNAL_SERVER_ERROR) {
-    res.setHeader('Content-Type', 'application/json');
-
-    if (data instanceof APIError) {
-        data = { message: data.message, code: data.code };
-        status = data.code;
+    if (status !== HTTPCode.NO_CONTENT) {
+        res.send(JSON.stringify({ status: 'ok', data }, null, 4));
+    } else {
+        res.send();
     }
 
-    res.status(status);
-    res.send(JSON.stringify({ status: 'error', data }, null, 4));
+    setFinalTags(status);
 }
 
-export function getRequestOriginIP (req): string {
-    if (req.headers['x-forwarded-for']) return req.headers['x-forwarded-for'].split(',').pop();
+export function closeWithError (res: Response, error: APIError): void {
+    res.setHeader('Content-Type', 'application/json');
 
-    return req.connection.remoteAddress || req.socket.remoteAddress || null;
+    res.status(error.code);
+    res.send(JSON.stringify({ status: 'error', data: { message: error.message, code: error.code } }, null, 4));
+
+    setFinalTags(error.code, error);
 }
 
-export function validateRequestPayload (body: any, schema: SchemaLike): Promise<any> {
-    const buildPath = (path: string[]) => {
-        return path.reduce((p, n) => {
-            return typeof n === 'string' ? p += `.${n}` : p += `[${n}]`;
-        }, '').slice(1);
+export function validateRequestBody (body: unknown, schema: AnySchema): Promise<any> {
+    const buildPath = (path: (string | number)[]) => {
+        return (path.reduce((p, n) => {
+            p += typeof n === 'string' ? `.${n}` : `[${n}]`;
+
+            return p;
+        }, '') as string).slice(1);
     };
 
     return new Promise((resolve, reject) => {
-        joi.validate(body, schema, {
-            convert: true,
+        const { error, value } = schema.validate(body, {
+            convert: false,
             stripUnknown: true
-        }, (error, data) => {
-            if (error) {
-                const path = buildPath(error.details[0].path);
-                const msg = `Request validation failed: ${error.details[0].message} (${path})`;
-
-                return reject(new APIError(msg, HTTPCode.BAD_REQUEST));
-            }
-
-            return resolve(data);
         });
+
+        if (error) {
+            const msg = `Request validation failed: ${error.details[0].message} (${buildPath(error.details[0].path)})`;
+
+            return reject(new APIError(msg, HTTPCode.BAD_REQUEST));
+        }
+
+        return resolve(value);
     });
+}
+
+function setFinalTags (status: number, error?: APIError) {
+    const span: Span = Config.fromSession('Span');
+    const endpoint = (Config.fromSession('Endpoint') as string).split(' ');
+
+    if (error) {
+        span.setTag(Tags.ERROR, true);
+        span.setTag('Location', error.location);
+    }
+
+    span.setTag(Tags.HTTP_STATUS_CODE, status);
+    span.setTag(Tags.HTTP_METHOD, endpoint[0]);
+    span.setTag(Tags.HTTP_URL, endpoint[1]);
 }

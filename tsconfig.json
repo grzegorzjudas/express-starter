@@ -2,7 +2,7 @@
     "compilerOptions": {
         "baseUrl": ".",
         "rootDir": "src",
-        "outDir": "build",
+        "outDir": "dist",
         "module": "commonjs",
         "moduleResolution": "node",
         "esModuleInterop": true,
@@ -21,12 +21,13 @@
         "noImplicitReturns": true,
         "noImplicitThis": true,
         "resolveJsonModule": true,
-        "noImplicitAny": false,
+        "noImplicitAny": true,
         "noUnusedLocals": true
     },
     "exclude": [
         "node_modules",
-        "build",
-        "src/**/*.spec.*"
+        "dist",
+        "src/**/*.spec.*",
+        "knexfile.js"
     ]
 }

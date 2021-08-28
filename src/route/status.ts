@@ -1,23 +1,13 @@
-/* Models */
-import { APIRoute, Request, Response } from '../model/API';
-import { HTTPMethod } from '../model/HTTP';
-
-/* Application files */
-import { respondSuccess } from '../lib/http';
-import DB from '../controller/DB';
+/* Types */
+import { HTTPMethod } from '../type/HTTP';
+import { APIRoute } from '../type/API';
 
 export default {
     method: HTTPMethod.GET,
     url: '/status',
-    controller: async (req: Request, res: Response) => {
-        const dbConnected = await DB.isConnected();
-
-        respondSuccess(res, {
-            status: 'up',
-            database: {
-                type: DB.getType(),
-                connected: dbConnected
-            }
-        });
+    controller: async () => {
+        return {
+            status: 'up'
+        };
     }
 } as APIRoute;

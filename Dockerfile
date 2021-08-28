@@ -1,10 +1,10 @@
-FROM node:10-alpine
+FROM node:14-alpine
 
 WORKDIR /application
+EXPOSE 80
 
-COPY package.json package-lock.json /application/
-RUN npm install --only production
-
-ADD artifact.tar.gz /application
+ADD artifact.tar.gz .
+ADD package.json .
+RUN npm install --only=production
 
 CMD [ "node", "index.js" ]

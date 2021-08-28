@@ -10,9 +10,20 @@ services:
             - "8080:80"
         depends_on:
             - db
+            - cache
             - jaeger
     db:
-        image: mongo:3.4
+        image: postgres:12-alpine
+        ports:
+            - "5432:5432"
+        env:
+            POSTGRES_PASSWORD: postgres
+            POSTGRES_DB: express-starter
+    cache:
+        image: redis:6-alpine
+        ports:
+            - "6379:6379"
+        command: ["redis-server", "--requirepass", "redis"]
     jaeger:
         image: jaegertracing/all-in-one
         ports:

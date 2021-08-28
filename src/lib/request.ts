@@ -1,99 +1,73 @@
 /* Libraries */
-import fetch, { RequestInit, Response } from 'node-fetch';
-import { globalTracer, Tags } from 'opentracing';
-
-/* Models */
-import { HTTPMethod, HTTPCode } from '../model/HTTP';
-import { SpanOptions } from '../model/Log';
-import { RestResponse } from '../model/API';
+import HTTPCode from 'http-status-codes';
+import fetch, { RequestInit, Headers, BodyInit } from 'node-fetch';
 
 /* Application files */
-import APIError from '../controller/APIError';
-import Config from '../controller/Config';
+import APIError from './error';
 
-async function request (method: HTTPMethod, url: string, span: SpanOptions, opts?: RequestInit): Promise<RestResponse> {
-    const reqSpan = globalTracer().startSpan(span.action, {
-        childOf: span.parent
+export type RequestResult<T> = {
+    status: number;
+    headers: Record<string, string>;
+    body: T;
+}
+
+function headersToRawObject (headers: Headers): Record<string, string> {
+    return Object
+        .entries(headers.raw())
+        .reduce((acc, [ key, value ]) => {
+            acc[key] = value[0];
+
+            return acc;
+        }, {});
+}
+
+export default async function request<T> (method: string, path: string, body?: unknown, opts?: RequestInit): Promise<RequestResult<T>> {
+    const url = path;
+    const headers = {};
+
+    headers['Accept'] = 'application/json';
+    headers['Content-Type'] = 'application/json';
+
+    const response = await fetch(url, {
+        method,
+        headers: {
+            ...headers,
+            ...(opts.headers || {})
+        },
+        ...(body ? { body: typeof body === 'object' ? JSON.stringify(body) : body as BodyInit } : {}),
+        ...opts
     });
 
-    reqSpan.setTag(Tags.COMPONENT, span.target);
-    reqSpan.setTag(Tags.HTTP_METHOD, method);
-    reqSpan.setTag(Tags.PEER_ADDRESS, url);
+    let errorMessage = '';
+    let content;
 
-    if (span.tags) {
-        Object.entries(span.tags).forEach(([ tag, value ]) => {
-            reqSpan.setTag(tag, value);
-        });
+    if (response.status >= 400) {
+        errorMessage += `Request failure: ${response.status} ${response.statusText}. `;
     }
-
-    let response: Response;
-    let body: string;
 
     try {
-        response = await fetch(url, {
-            ...opts,
-            method,
-            headers: {
-                'Content-Type': 'application/json',
-                ...(opts.headers || {})
+        const type = response.headers.get('Content-Type');
+
+        content = await response.text();
+
+        if (response.status !== HTTPCode.NO_CONTENT) {
+            if (type.includes('application/json') || type.includes('text/json')) {
+                content = JSON.parse(content);
             }
-        });
-
-        body = await response.text();
-        const headers = response.headers.raw();
-
-        return { body: JSON.parse(body), headers };
-    } catch (error) {
-        const msg = `Request to '${url}' failed: ${error.message}`;
-
-        reqSpan.setTag(Tags.ERROR, true);
-        reqSpan.logEvent(error.name, msg);
-        reqSpan.log({
-            body: body.split(/\n/g)[0].slice(0, 100)
-        });
-
-        throw new APIError(msg, HTTPCode.BAD_GATEWAY);
-    } finally {
-        if (response) {
-            reqSpan.setTag(Tags.HTTP_STATUS_CODE, response.status);
+        } else {
+            content = '';
         }
-
-        reqSpan.finish();
+    } catch (error) {
+        errorMessage += `Failed to parse response JSON: ${content}`;
     }
-}
 
-export async function GET (url: string, span: SpanOptions): Promise<RestResponse> {
-    if (!span.parent) span.parent = Config.fromSession('Span');
+    if (errorMessage) {
+        throw new APIError(errorMessage, response.status);
+    }
 
-    return request(HTTPMethod.GET, url, span, {});
-}
-
-export async function POST (url: string, span: SpanOptions, data?: any): Promise<RestResponse> {
-    if (!span.parent) span.parent = Config.fromSession('Span');
-
-    return request(HTTPMethod.POST, url, span, {
-        ...(data ? { body: JSON.stringify(data) } : {})
-    });
-}
-
-export async function PUT (url: string, span: SpanOptions, data?: any): Promise<RestResponse> {
-    if (!span.parent) span.parent = Config.fromSession('Span');
-
-    return request(HTTPMethod.PUT, url, span, {
-        ...(data ? { body: JSON.stringify(data) } : {})
-    });
-}
-
-export async function PATCH (url: string, span: SpanOptions, data?: any): Promise<RestResponse> {
-    if (!span.parent) span.parent = Config.fromSession('Span');
-
-    return request(HTTPMethod.PATCH, url, span, {
-        ...(data ? { body: JSON.stringify(data) } : {})
-    });
-}
-
-export async function DELETE (url: string, span: SpanOptions): Promise<RestResponse> {
-    if (!span.parent) span.parent = Config.fromSession('Span');
-
-    return request(HTTPMethod.DELETE, url, span, {});
+    return {
+        status: response.status,
+        headers: headersToRawObject(response.headers),
+        body: content
+    };
 }
